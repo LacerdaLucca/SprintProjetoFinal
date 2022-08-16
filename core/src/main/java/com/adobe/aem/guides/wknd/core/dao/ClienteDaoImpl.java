@@ -39,17 +39,31 @@ public class ClienteDaoImpl implements ClienteDao {
     @Override
     public void addCliente(Cliente cliente) {
         try (Connection connection = databaseService.getConnection()) {
-            String sql = "INSERT INTO CLIENTE (NOME) VALUES (?)";
-            try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
+            String sql;
+            if(cliente.getId() == 0){
+                sql = "INSERT INTO CLIENTE (NOME) VALUES (?)";
+                try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
 
-                pstm.setString(1,cliente.getNome());
-                pstm.execute();
-                try(ResultSet rst = pstm.getGeneratedKeys()) {
-                    while (rst.next()) {
-                        cliente.setId(rst.getInt(1));
+                    pstm.setString(1,cliente.getNome());
+
+                    pstm.execute();
+                    try(ResultSet rst = pstm.getGeneratedKeys()) {
+                        while (rst.next()) {
+                            cliente.setId(rst.getInt(1));
+                        }
                     }
                 }
+            }else{
+                sql = "INSERT INTO CLIENTE (ID,NOME) VALUES (?, ?)";
+                try (PreparedStatement pstm = connection.prepareStatement(sql)){
+
+                    pstm.setInt(1,cliente.getId());
+                    pstm.setString(2,cliente.getNome());
+
+                    pstm.execute();
+                }
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

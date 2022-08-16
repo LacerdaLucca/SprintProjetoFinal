@@ -28,6 +28,7 @@ com\adobe\aem\guides\wknd\core\service\NotaFiscalServiceImpl.class
 com\adobe\aem\guides\wknd\core\servlets\SimpleServlet.class
 com\adobe\aem\guides\wknd\core\models\NotaFiscal.class
 com\adobe\aem\guides\wknd\core\listeners\SimpleResourceListener.class
+com\adobe\aem\guides\wknd\core\filters\PrimeiroAcessoFilter.class
 com\adobe\aem\guides\wknd\core\filters\package-info.class
 com\adobe\aem\guides\wknd\core\servlets\ClienteServlet.class
 com\adobe\aem\guides\wknd\core\models\Produto.class
