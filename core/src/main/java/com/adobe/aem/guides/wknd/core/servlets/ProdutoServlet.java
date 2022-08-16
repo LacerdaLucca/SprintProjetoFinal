@@ -15,8 +15,8 @@
  */
 package com.adobe.aem.guides.wknd.core.servlets;
 
-import com.adobe.aem.guides.wknd.core.models.Cliente;
-import com.adobe.aem.guides.wknd.core.service.ClienteService;
+import com.adobe.aem.guides.wknd.core.models.Produto;
+import com.adobe.aem.guides.wknd.core.service.ProdutoService;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
@@ -40,23 +40,44 @@ import static org.apache.sling.api.servlets.ServletResolverConstants.*;
 @Component(immediate = true, service = Servlet.class, property = {
         SLING_SERVLET_METHODS + "=" + "GET",
         SLING_SERVLET_METHODS + "=" + "POST",
-        SLING_SERVLET_PATHS + "=" + "/bin/testServlet",
+        SLING_SERVLET_PATHS + "=" + "/bin/ProdutoServlet",
         SLING_SERVLET_EXTENSIONS + "=" + "txt", SLING_SERVLET_EXTENSIONS + "=" + "json"})
 
-@ServiceDescription("Servlet Serve teste")
+@ServiceDescription("Servlet do Produto")
 public class ProdutoServlet extends SlingAllMethodsServlet {
 
     private static final long serialVersionUID = 1L;
 
     @Reference
-    private ClienteService clienteService;
+    private ProdutoService produtoService;
     @Override
     protected void doGet(final SlingHttpServletRequest req,
                          final SlingHttpServletResponse resp) throws ServletException, IOException {
-        final Resource resource = req.getResource();
-        List<Cliente> list = clienteService.getClientes();
-        String json = clienteService.strToJson(list);
+        resp.setContentType("application/json");
+        String json = produtoService.doGet(req,resp);
         resp.getWriter().write(json);
+    }
+    @Override
+    protected void doPost(final SlingHttpServletRequest req,
+                          final SlingHttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        String json = produtoService.doPost(req,resp);
+        resp.getWriter().write(json);
+    }
+    @Override
+    protected void doDelete(final SlingHttpServletRequest req,
+                            final SlingHttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        String json = produtoService.doDelete(req,resp);
+        resp.getWriter().write(json);
+    }
+    @Override
+    protected void doPut(final SlingHttpServletRequest req,
+                         final SlingHttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        String json = produtoService.doPut(req,resp);
+        resp.getWriter().write(json);
+
     }
 
 }
