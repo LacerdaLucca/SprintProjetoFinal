@@ -1,6 +1,5 @@
 package com.adobe.aem.guides.wknd.core.service;
 
-import com.adobe.aem.guides.wknd.core.models.Cliente;
 import com.adobe.aem.guides.wknd.core.models.NotaFiscal;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;

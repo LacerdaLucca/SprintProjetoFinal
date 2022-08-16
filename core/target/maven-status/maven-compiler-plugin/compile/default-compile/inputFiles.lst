@@ -5,9 +5,11 @@ C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\m
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\dao\ClienteDao.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\schedulers\SimpleScheduledTask.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\models\Produto.java
+C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\dao\RelatorioDaoImpl.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\service\ProdutoServiceImpl.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\servlets\package-info.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\listeners\package-info.java
+C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\servlets\RelatorioServlet.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\models\ErroDTO.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\servlets\ClienteServlet.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\schedulers\package-info.java
@@ -22,10 +24,14 @@ C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\m
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\service\DatabaseService.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\service\NotaFiscalServiceImpl.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\filters\LoggingFilter.java
+C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\models\RelatorioDTO.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\dao\ProdutoDaoImpl.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\listeners\SimpleResourceListener.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\models\Cliente.java
+C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\dao\RelatorioDao.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\dao\NotaFiscalDao.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\filters\package-info.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\service\ClienteServiceImpl.java
+C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\service\RelatorioService.java
+C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\service\RelatorioServiceImpl.java
 C:\Users\Lucca\Documents\ESTUDOS\Compass.UOL\AEM\Projetos\projeto-aem\core\src\main\java\com\adobe\aem\guides\wknd\core\servlets\ProdutoServlet.java

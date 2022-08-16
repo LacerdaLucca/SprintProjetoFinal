@@ -104,4 +104,5 @@ public class NotaFiscalDaoImpl implements NotaFiscalDao {
         }
         return NotaFiscal;
     }
+
 }

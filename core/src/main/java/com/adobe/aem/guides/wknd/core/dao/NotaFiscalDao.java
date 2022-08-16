@@ -1,6 +1,5 @@
 package com.adobe.aem.guides.wknd.core.dao;
 
-import com.adobe.aem.guides.wknd.core.models.Cliente;
 import com.adobe.aem.guides.wknd.core.models.NotaFiscal;
 
 import java.util.List;
