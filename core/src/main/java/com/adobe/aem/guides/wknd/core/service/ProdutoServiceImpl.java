@@ -1,9 +1,11 @@
 package com.adobe.aem.guides.wknd.core.service;
 
 import com.adobe.aem.guides.wknd.core.dao.ProdutoDao;
+import com.adobe.aem.guides.wknd.core.models.Cliente;
 import com.adobe.aem.guides.wknd.core.models.Produto;
 import com.adobe.aem.guides.wknd.core.models.ErroDTO;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.io.IOUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -11,12 +13,14 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component(immediate = true, service = ProdutoService.class)
 public class ProdutoServiceImpl implements ProdutoService {
     @Reference
-    private ProdutoDao ProdutoDao;
+    private ProdutoDao produtoDao;
 
     @Override
     public String doGet(SlingHttpServletRequest req, SlingHttpServletResponse resp) {
@@ -29,7 +33,7 @@ public class ProdutoServiceImpl implements ProdutoService {
                 json = strToJson(list);
             }
         }else{
-            Produto produto = ProdutoDao.buscaProduto(Integer.parseInt(req.getParameter("id")));
+            Produto produto = produtoDao.buscaProduto(Integer.parseInt(req.getParameter("id")));
             json = strToJson(produto);
             if(produto==null) {
                 json = strToJson(getErroDTO("Id não encontrado"));
@@ -51,28 +55,54 @@ public class ProdutoServiceImpl implements ProdutoService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Produto produto;
+        Type listType = new TypeToken<ArrayList<Cliente>>(){}.getType();
+        List<Produto> produtoList= new Gson().fromJson(produtoPS, listType);;
         try {
-            produto = new Gson().fromJson(produtoPS, Produto.class);
-            ProdutoDao.addProduto(produto);
+            for(Produto produto: produtoList){
+                produtoDao.addProduto(produto);
+            }
+
         }catch (Exception e){
-                return strToJson(getErroDTO("Entrada de dados invalidas"));
+            return strToJson(getErroDTO("Entrada de dados invalidos"));
         }
-        return strToJson(produto);
+        return strToJson(produtoList);
     }
 
     @Override
     public String doDelete(SlingHttpServletRequest req, SlingHttpServletResponse resp) {
         String json = "";
+        String produtoPS = null;
         if(req.getParameter("id")!=null) {
-            Produto produto = ProdutoDao.buscaProduto(Integer.parseInt(req.getParameter("id")));
-            ProdutoDao.rmvProduto(produto);
+            Produto produto = produtoDao.buscaProduto(Integer.parseInt(req.getParameter("id")));
+            produtoDao.rmvProduto(produto);
             json = strToJson(produto);
             if(produto==null) {
-                json = strToJson(getErroDTO("Produto não encontrado para ser deletado"));
+                json = strToJson(getErroDTO("Cliente não encontrado para ser deletado"));
             }
         }else{
-            json = strToJson(getErroDTO("Você não passou o id como parâmetro para ser deletado"));
+            try {
+                if(req.getReader()!=null) {
+                    produtoPS = IOUtils.toString(req.getReader());
+                    Type listType = new TypeToken<ArrayList<Cliente>>() {}.getType();
+                    List<Produto> produtoList = new Gson().fromJson(produtoPS, listType);
+                    try {
+                        for (Produto produto : produtoList) {
+                            if(produtoDao.buscaProduto(produto.getId()).getNome().equals(produto.getNome())) {
+                                produtoDao.rmvProduto(produto);
+                            }else{
+                                return strToJson(getErroDTO("Nome diferente do registrado, remoção interrompida"));
+                            }
+                        }
+                    } catch (Exception e) {
+                        return strToJson(getErroDTO("Entrada de dados invalidos"));
+                    }
+                    json = strToJson(produtoList);
+                }else{
+                    json = strToJson(getErroDTO("Informações invalidas para a remoção"));
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         return json;
     }
@@ -87,7 +117,7 @@ public class ProdutoServiceImpl implements ProdutoService {
         Produto produto;
         try {
             produto = new Gson().fromJson(produtoPS, Produto.class);
-            ProdutoDao.attProduto(produto);
+            produtoDao.attProduto(produto);
 
         }catch (Exception e){
             return strToJson(getErroDTO("Entrada de dados invalidas"));
@@ -97,7 +127,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public List<Produto> getProdutos(){
-        return ProdutoDao.getProdutos();
+        return produtoDao.getProdutos();
     }
 
     @Override

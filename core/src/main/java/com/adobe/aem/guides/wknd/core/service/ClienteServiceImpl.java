@@ -5,6 +5,7 @@ import com.adobe.aem.guides.wknd.core.models.Cliente;
 import com.adobe.aem.guides.wknd.core.models.ErroDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.io.IOUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -12,6 +13,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component(immediate = true, service = ClienteService.class)
@@ -46,25 +49,29 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public String doPost(SlingHttpServletRequest req, SlingHttpServletResponse resp) {
-        String ClientePS = null;
+        String clientePS = null;
         try {
-            ClientePS = IOUtils.toString(req.getReader());
+            clientePS = IOUtils.toString(req.getReader());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Cliente cliente;
+        Type listType = new TypeToken<ArrayList<Cliente>>(){}.getType();
+        List<Cliente> clienteList= new Gson().fromJson(clientePS, listType);;
         try {
-            cliente = new Gson().fromJson(ClientePS, Cliente.class);
-            clienteDao.addCliente(cliente);
+            for(Cliente cliente: clienteList){
+                clienteDao.addCliente(cliente);
+            }
+
         }catch (Exception e){
-                return strToJson(getErroDTO("Entrada de dados invalidas"));
+                return strToJson(getErroDTO("Entrada de dados invalidos"));
         }
-        return strToJson(cliente);
+        return strToJson(clienteList);
     }
 
     @Override
     public String doDelete(SlingHttpServletRequest req, SlingHttpServletResponse resp) {
         String json = "";
+        String clientePS = null;
         if(req.getParameter("id")!=null) {
             Cliente cliente = clienteDao.buscaCliente(Integer.parseInt(req.getParameter("id")));
             clienteDao.rmvCliente(cliente);
@@ -73,21 +80,43 @@ public class ClienteServiceImpl implements ClienteService {
                 json = strToJson(getErroDTO("Cliente não encontrado para ser deletado"));
             }
         }else{
-            json = strToJson(getErroDTO("Você não passou o id como parâmetro para ser deletado"));
+            try {
+                if(req.getReader()!=null) {
+                    clientePS = IOUtils.toString(req.getReader());
+                    Type listType = new TypeToken<ArrayList<Cliente>>() {}.getType();
+                    List<Cliente> clienteList = new Gson().fromJson(clientePS, listType);
+                    try {
+                        for (Cliente cliente : clienteList) {
+                            if(clienteDao.buscaCliente(cliente.getId()).getNome().equals(cliente.getNome())) {
+                                clienteDao.rmvCliente(cliente);
+                            }else{
+                                return strToJson(getErroDTO("Nome diferente do registrado, remoção interrompida"));
+                            }
+                        }
+                    } catch (Exception e) {
+                        return strToJson(getErroDTO("Entrada de dados invalidos"));
+                    }
+                    json = strToJson(clienteList);
+                }else{
+                    json = strToJson(getErroDTO("Informações invalidas para a remoção"));
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         return json;
     }
-    @Override
+        @Override
     public String doPut(final SlingHttpServletRequest req, final SlingHttpServletResponse resp){
-        String ClientePS = null;
+        String clientePS = null;
         try {
-            ClientePS = IOUtils.toString(req.getReader());
+            clientePS = IOUtils.toString(req.getReader());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         Cliente cliente;
         try {
-            cliente = new Gson().fromJson(ClientePS, Cliente.class);
+            cliente = new Gson().fromJson(clientePS, Cliente.class);
             clienteDao.attCliente(cliente);
 
         }catch (Exception e){

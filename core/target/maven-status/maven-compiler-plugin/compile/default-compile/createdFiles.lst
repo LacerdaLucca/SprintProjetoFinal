@@ -1,3 +1,4 @@
+com\adobe\aem\guides\wknd\core\service\ClienteServiceImpl$1.class
 com\adobe\aem\guides\wknd\core\service\RelatorioServiceImpl.class
 com\adobe\aem\guides\wknd\core\servlets\NotaFiscalServlet.class
 com\adobe\aem\guides\wknd\core\schedulers\SimpleScheduledTask$Config.class
@@ -15,6 +16,7 @@ com\adobe\aem\guides\wknd\core\filters\LoggingFilter.class
 com\adobe\aem\guides\wknd\core\service\DatabaseService.class
 com\adobe\aem\guides\wknd\core\models\RelatorioDTO.class
 com\adobe\aem\guides\wknd\core\servlets\RelatorioServlet.class
+com\adobe\aem\guides\wknd\core\service\ProdutoServiceImpl$1.class
 com\adobe\aem\guides\wknd\core\dao\ClienteDaoImpl.class
 com\adobe\aem\guides\wknd\core\service\ProdutoServiceImpl.class
 com\adobe\aem\guides\wknd\core\service\ProdutoService.class
@@ -29,6 +31,7 @@ com\adobe\aem\guides\wknd\core\servlets\SimpleServlet.class
 com\adobe\aem\guides\wknd\core\models\NotaFiscal.class
 com\adobe\aem\guides\wknd\core\listeners\SimpleResourceListener.class
 com\adobe\aem\guides\wknd\core\filters\PrimeiroAcessoFilter.class
+com\adobe\aem\guides\wknd\core\service\ClienteServiceImpl$2.class
 com\adobe\aem\guides\wknd\core\filters\package-info.class
 com\adobe\aem\guides\wknd\core\servlets\ClienteServlet.class
 com\adobe\aem\guides\wknd\core\models\Produto.class
