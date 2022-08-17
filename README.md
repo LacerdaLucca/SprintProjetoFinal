@@ -1,126 +1,187 @@
-# Sample AEM project template
+# Projeto Final PB
+Projeto final desenvolvido com base em todo o aprendizado em Java do Programa de bolsas da Compass.oul, para avaliação do desenvolvimento e aprimoramento das habilidade no BackEnd java. Projeto desenvolvido em AEM na instancia Author.
 
-This is a project template for AEM-based applications. It is intended as a best-practice set of examples as well as a potential starting point to develop your own functionality.
+--------------------------
+Própositos
+--------------------------
+	Projeto foi desenvolvido a fim de mostrar todo o desenvolvimento e aprendizado dos Bolsistas BackEnd em java. 
+	O Projeto tem como objetivo o desenvolvimento de um catalogo de produtos no padrão REST utilizando a tecnologia de servlets do Sling.
+	
+--------------------------
+Banco De Dados
+--------------------------
 
-## Modules
 
-The main parts of the template are:
+	Utilizar o banco de dados mySQL com a database "lojafinal".
+	usuario = root;
+	senha = suaSenhaSql;
 
-* core: Java bundle containing all core functionality like OSGi services, listeners or schedulers, as well as component-related Java code such as servlets or request filters.
-* it.tests: Java based integration tests
-* ui.apps: contains the /apps (and /etc) parts of the project, ie JS&CSS clientlibs, components, and templates
-* ui.content: contains sample content using the components from the ui.apps
-* ui.config: contains runmode specific OSGi configs for the project
-* ui.frontend: an optional dedicated front-end build mechanism (Angular, React or general Webpack project)
-* ui.tests: Selenium based UI tests
-* all: a single content package that embeds all of the compiled modules (bundles and content packages) including any vendor dependencies
-* analyse: this module runs analysis on the project which provides additional validation for deploying into AEMaaCS
 
-## How to build
 
-To build all the modules run in the project root directory the following command with Maven 3:
+    CREATE TABLE PRODUTO(
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    NOME VARCHAR(200),
+    categoria VARCHAR(100),
+    PRECO DECIMAL(10,2)
+    );
+    
+    CREATE TABLE CLIENTE(
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    NOME VARCHAR(200)
+    );
+    
+    CREATE TABLE NOTAFISCAL(
+    NUMERO INT PRIMARY KEY AUTO_INCREMENT,
+    IDPRODUTO INT,
+    IDCLIENTE INT,
+    VALOR DECIMAL(15,2),
+    foreign key(IDPRODUTO) REFERENCES produtos(ID),
+    foreign key(IDCLIENTE) REFERENCES produtos(ID)
+    );
 
-    mvn clean install
 
-To build all the modules and deploy the `all` package to a local instance of AEM, run in the project root directory the following command:
+Após a configuração das tabelas pode-se iniciar os testes nos endpoints criados
 
-    mvn clean install -PautoInstallSinglePackage
+--------------------------
+EndPoints
+--------------------------
 
-Or to deploy it to a publish instance, run
+	#Produtos - Retorno json
+	www.localhost:4502/bin/produto - POST, GET, DELETE e PUT
+	
+	#Clientes - Retorno json
+	www.localhost:4502/bin/cliente - POST, GET, DELETE e PUT
+	
+	#Notas Fiscais - Retorno json
+	www.localhost:4502/bin/notafiscal - POST, GET, DELETE e PUT
+	
+	#Relatorio de Produtos - Retorno HTML
+	www.localhost:4502/bin/relatorio - GET
 
-    mvn clean install -PautoInstallSinglePackagePublish
 
-Or alternatively
+# Como Utilizar
 
-    mvn clean install -PautoInstallSinglePackage -Daem.port=4503
 
-Or to deploy only the bundle to the author, run
 
-    mvn clean install -PautoInstallBundle
+## Produto
 
-Or to deploy only a single content package, run in the sub-module directory (i.e `ui.apps`)
 
-    mvn clean install -PautoInstallPackage
+	--------------------------------------------
+	localhost:4502/bin/produto
+	--------------------------------------------
 
-## Testing
+Payload
 
-There are three levels of testing contained in the project:
+	[
+	    {
+        "id": 1,
+	    "name": "Teste",
+	    "categoria": "categoria teste";
+	    "price":150.0
+	    }
+	]
 
-### Unit tests
+POST
+- Adiciona um novo Produto.
 
-This show-cases classic unit testing of the code contained in the bundle. To
-test, execute:
+    - `Parâmetros`: Nenhum.
 
-    mvn clean test
+    - `Payload`: Todos os campos em formato Json no corpo da requisição com exceção id.
 
-### Integration tests
+GET
+- Recupera a lista de Produtos.
+    - `Parâmetros`:
+        - Opcionais:
+            - id='id' - Recupera um único produto. (único)
+    - `Payload`: Nenhum.
 
-This allows running integration tests that exercise the capabilities of AEM via
-HTTP calls to its API. To run the integration tests, run:
+DELETE
+- Deleta um Produto.
 
-    mvn clean verify -Plocal
+    - `Parâmetros`:
+        - Obrigatório
+            - id='id'.
+              -O produto não será deletado se já estiver em uma nota fiscal.
 
-Test classes must be saved in the `src/main/java` directory (or any of its
-subdirectories), and must be contained in files matching the pattern `*IT.java`.
+    - `Payload`: 
+      - Campos id e nome ou um array de dados.
 
-The configuration provides sensible defaults for a typical local installation of
-AEM. If you want to point the integration tests to different AEM author and
-publish instances, you can use the following system properties via Maven's `-D`
-flag.
+PUT
+- Atualiza um Produto escolhido.
+    - `Parâmetros`: Nenhum.
 
-| Property | Description | Default value |
-| --- | --- | --- |
-| `it.author.url` | URL of the author instance | `http://localhost:4502` |
-| `it.author.user` | Admin user for the author instance | `admin` |
-| `it.author.password` | Password of the admin user for the author instance | `admin` |
-| `it.publish.url` | URL of the publish instance | `http://localhost:4503` |
-| `it.publish.user` | Admin user for the publish instance | `admin` |
-| `it.publish.password` | Password of the admin user for the publish instance | `admin` |
+    - `Payload`: Todos os campos.
 
-The integration tests in this archetype use the [AEM Testing
-Clients](https://github.com/adobe/aem-testing-clients) and showcase some
-recommended [best
-practices](https://github.com/adobe/aem-testing-clients/wiki/Best-practices) to
-be put in use when writing integration tests for AEM.
+##
 
-## Static Analysis
+## Cliente
 
-The `analyse` module performs static analysis on the project for deploying into AEMaaCS. It is automatically
-run when executing
 
-    mvn clean install
+	--------------------------------------------
+	localhost:4502/bin/cliente
+	--------------------------------------------
 
-from the project root directory. Additional information about this analysis and how to further configure it
-can be found here https://github.com/adobe/aemanalyser-maven-plugin
+Payload
 
-### UI tests
+	{
+	    "name":"Lucca Lacerda"
+	}
 
-They will test the UI layer of your AEM application using Selenium technology. 
+POST
+- Adiciona um novo Cliente.
 
-To run them locally:
+    - `Parâmetros`: Nenhum.
 
-    mvn clean verify -Pui-tests-local-execution
+    - `Payload`: Todos os campos em formato Json no corpo da requisição com exceção do id.
 
-This default command requires:
-* an AEM author instance available at http://localhost:4502 (with the whole project built and deployed on it, see `How to build` section above)
-* Chrome browser installed at default location
+GET
+- Recupera a lista de Clientes.
+    - `Parâmetros`:
+        - Opcional:
+            - id='id' - Recupera um único Cliente.
 
-Check README file in `ui.tests` module for more details.
+    - `Payload`: Nenhum.
 
-## ClientLibs
+DELETE
+- Deleta um Cliente.
+    - `Parâmetros`:
+        - Obrigatório
+            - productId='id'.
+              -O produto não será deletado se já estiver em uma nota fiscal.
 
-The frontend module is made available using an [AEM ClientLib](https://helpx.adobe.com/experience-manager/6-5/sites/developing/using/clientlibs.html). When executing the NPM build script, the app is built and the [`aem-clientlib-generator`](https://github.com/wcm-io-frontend/aem-clientlib-generator) package takes the resulting build output and transforms it into such a ClientLib.
+    - `Payload`:
+        - Campos id e nome ou um array de dados.
 
-A ClientLib will consist of the following files and directories:
+PUT
+- Atualiza um Cliente escolhido.
+    - `Parâmetros`: Nenhum.
 
-- `css/`: CSS files which can be requested in the HTML
-- `css.txt` (tells AEM the order and names of files in `css/` so they can be merged)
-- `js/`: JavaScript files which can be requested in the HTML
-- `js.txt` (tells AEM the order and names of files in `js/` so they can be merged
-- `resources/`: Source maps, non-entrypoint code chunks (resulting from code splitting), static assets (e.g. icons), etc.
+    - `Payload`: Todos os campos.
 
-## Maven settings
+##
 
-The project comes with the auto-public repository configured. To setup the repository in your Maven settings, refer to:
+##
 
-    http://helpx.adobe.com/experience-manager/kb/SetUpTheAdobeMavenRepository.html
+## Relatorio
+
+
+	------------------------------------------------
+	localhost:4502/bin/relatorio
+	-------------------------------------------------
+
+
+
+GET
+- Recupera o relatório de todos os produtos comprados por um determinado Cliente.
+    - `Parâmetros`:
+        - Obrigatório:
+            - cliente='id'.
+
+    - `Payload`: Nenhum.
+
+
+#
+Agradecimento aos meus iustrutores
+Thauany Correa Martins,
+Renan Gomes Acosta e
+Andre Monteiro Fernandes Lima(Responsável por esse modelo de README.md)
