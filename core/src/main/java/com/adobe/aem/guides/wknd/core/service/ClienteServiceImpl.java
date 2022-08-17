@@ -3,6 +3,7 @@ package com.adobe.aem.guides.wknd.core.service;
 import com.adobe.aem.guides.wknd.core.dao.ClienteDao;
 import com.adobe.aem.guides.wknd.core.models.Cliente;
 import com.adobe.aem.guides.wknd.core.models.ErroDTO;
+import com.adobe.aem.guides.wknd.core.models.NotaFiscal;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
@@ -14,6 +15,7 @@ import org.osgi.service.component.annotations.Reference;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,58 +52,82 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public String doPost(SlingHttpServletRequest req, SlingHttpServletResponse resp) {
         String clientePS = null;
+        List<Cliente> listaCliente = null;
         try {
             clientePS = IOUtils.toString(req.getReader());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Type listType = new TypeToken<ArrayList<Cliente>>(){}.getType();
-        List<Cliente> clienteList= new Gson().fromJson(clientePS, listType);;
-        try {
-            for(Cliente cliente: clienteList){
-                clienteDao.addCliente(cliente);
-            }
+        if(clientePS.charAt(0) == '['){
+            Type tipoLista = new TypeToken<ArrayList<Cliente>>(){}.getType();
+            listaCliente = new Gson().fromJson(clientePS, tipoLista);;
+            try {
+                for(Cliente cliente: listaCliente){
+                    clienteDao.addCliente(cliente);
+                }
 
-        }catch (Exception e){
-                return strToJson(getErroDTO("Entrada de dados invalidos"));
+            }catch (Exception e){
+                    return strToJson(getErroDTO("Entrada de dados invalidos"));
+            }
+        }else{
+            Cliente cliente;
+            try {
+                cliente = new Gson().fromJson(clientePS, Cliente.class);
+                clienteDao.addCliente(cliente);
+                return strToJson(cliente);
+            }catch (Exception e){
+                return strToJson(getErroDTO("Entrada de dados invalidas"));
+            }
         }
-        return strToJson(clienteList);
+        return strToJson(listaCliente);
     }
 
     @Override
     public String doDelete(SlingHttpServletRequest req, SlingHttpServletResponse resp) {
         String json = "";
         String clientePS = null;
-        if(req.getParameter("id")!=null) {
-            Cliente cliente = clienteDao.buscaCliente(Integer.parseInt(req.getParameter("id")));
-            clienteDao.rmvCliente(cliente);
-            json = strToJson(cliente);
-            if(cliente==null) {
-                json = strToJson(getErroDTO("Cliente não encontrado para ser deletado"));
+        List<Cliente> listaCliente = null;
+        try {
+            clientePS = IOUtils.toString(req.getReader());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        if(req.getParameter("id")!=null || (clientePS !=null && (clientePS.charAt(0) != '['))) {
+            Cliente cliente = null;
+            if(req.getParameter("id")==null){
+                cliente = new Gson().fromJson(clientePS, Cliente.class);
+            }else {
+                cliente = clienteDao.buscaCliente(Integer.parseInt(req.getParameter("id")));
             }
-        }else{
             try {
-                if(req.getReader()!=null) {
-                    clientePS = IOUtils.toString(req.getReader());
-                    Type listType = new TypeToken<ArrayList<Cliente>>() {}.getType();
-                    List<Cliente> clienteList = new Gson().fromJson(clientePS, listType);
+                if (clienteDao.buscaCliente(cliente.getId()).getNome().equals(cliente.getNome())) {
+                    clienteDao.rmvCliente(cliente);
+                } else {
+                    return strToJson(getErroDTO("Nome diferente do registrado, remoção interrompida"));
+                }
+            }catch (Exception ex){
+                return strToJson(getErroDTO("Cliente não encontrado para ser deletado"));
+            }
+            json = strToJson(cliente);
+        }else{
+            if(clientePS !=null && (clientePS.charAt(0) == '[')) {
+                    Type tipoLista = new TypeToken<ArrayList<Cliente>>() {
+                    }.getType();
+                    listaCliente = new Gson().fromJson(clientePS, tipoLista);
                     try {
-                        for (Cliente cliente : clienteList) {
-                            if(clienteDao.buscaCliente(cliente.getId()).getNome().equals(cliente.getNome())) {
+                        for (Cliente cliente : listaCliente) {
+                            if (clienteDao.buscaCliente(cliente.getId()).getNome().equals(cliente.getNome())) {
                                 clienteDao.rmvCliente(cliente);
-                            }else{
+                            } else {
                                 return strToJson(getErroDTO("Nome diferente do registrado, remoção interrompida"));
                             }
                         }
+                        json = strToJson(listaCliente);
                     } catch (Exception e) {
                         return strToJson(getErroDTO("Entrada de dados invalidos"));
                     }
-                    json = strToJson(clienteList);
-                }else{
-                    json = strToJson(getErroDTO("Informações invalidas para a remoção"));
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            }else{
+                json = strToJson(getErroDTO("Informações invalidas para a remoção"));
             }
         }
         return json;

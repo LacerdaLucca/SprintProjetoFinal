@@ -36,4 +36,13 @@ public class Produto {
     public double getPreco() {
         return preco;
     }
+
+    public String toHTML() {
+        return "Produto:" + "</br>" +
+                "id=" + id +
+                ", nome=" + nome +
+                ", categoria=" + categoria +
+                ", preco=" + preco +
+                '}' + "</br>";
+    }
 }

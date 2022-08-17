@@ -20,8 +20,8 @@ public class RelatorioDTO {
 
     public void addProdutoRelatorio(int idProduto){
         ProdutoDao produtoDao = new ProdutoDaoImpl();
-//        Produto produto = produtoDao.buscaProduto(idProduto);
-        Produto produto = new Produto();
+        Produto produto = produtoDao.buscaProduto(idProduto);
+//        Produto produto = new Produto();
         this.produtos.add(produto);
     }
 
@@ -29,4 +29,8 @@ public class RelatorioDTO {
         return idCliente;
     }
 
+
+    public Collection<Produto> getProdutos() {
+        return produtos;
+    }
 }

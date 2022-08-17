@@ -40,7 +40,7 @@ import static org.apache.sling.api.servlets.ServletResolverConstants.*;
 @Component(immediate = true, service = Servlet.class, property = {
         SLING_SERVLET_METHODS + "=" + "GET",
         SLING_SERVLET_METHODS + "=" + "POST",
-        SLING_SERVLET_PATHS + "=" + "/bin/ProdutoServlet",
+        SLING_SERVLET_PATHS + "=" + "/bin/produto",
         SLING_SERVLET_EXTENSIONS + "=" + "txt", SLING_SERVLET_EXTENSIONS + "=" + "json"})
 
 @ServiceDescription("Servlet do Produto")
