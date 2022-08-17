@@ -42,7 +42,7 @@ public class RelatorioServletTest
     void TesteComParametros(){
 
         RelatorioDTO relatorioDTO = new RelatorioDTO(1);
-        req.addRequestParameter("id", "1");
+        req.addRequestParameter("cliente", "1");
         Mockito.when(relatorioServiceMock.doGet(req,resp)).thenReturn(String.valueOf(relatorioDTO.getIdCliente()));
         try {
             relatorioServlet.doGet(req, resp);
@@ -51,7 +51,7 @@ public class RelatorioServletTest
             Assertions.fail();
         }
         Assertions.assertEquals(HttpServletResponse.SC_OK, resp.getStatus());
-        Assertions.assertEquals("application/json", resp.getContentType());
+        Assertions.assertEquals("text/html", resp.getContentType());
 //        Assertions.assertEquals("application/json;charset=UTF-8", resp.getContentType());
     }
 }

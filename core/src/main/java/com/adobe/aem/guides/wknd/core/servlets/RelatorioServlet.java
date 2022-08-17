@@ -61,7 +61,7 @@ public class RelatorioServlet extends SlingAllMethodsServlet {
     protected void doGet(SlingHttpServletRequest req,
                          SlingHttpServletResponse resp) throws ServletException, IOException {
         int statusCode = HttpServletResponse.SC_OK;
-        resp.setContentType("application/json");
+        resp.setContentType("text/html");
         String json = "";
         try {
              json = relatorioService.doGet(req, resp);
