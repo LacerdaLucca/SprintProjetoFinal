@@ -159,10 +159,58 @@ PUT
     - `Payload`: Todos os campos.
 
 ##
+## Cliente
+
+
+	--------------------------------------------
+	localhost:4502/bin/notafiscal
+	--------------------------------------------
+
+Payload
+
+	{   
+        "numero": 3,
+        "idcliente": 1,
+        "idproduto": 1,
+	    "preco": 100
+	}
+
+POST
+- Adiciona um nova nota fiscal.
+
+    - `Parâmetros`: Nenhum.
+
+    - `Payload`: Todos os campos em formato Json no corpo da requisição com exceção do número.
+
+GET
+- Recupera a lista de notas fiscais.
+    - `Parâmetros`:
+        - Opcional:
+            - cliente='id' - Recupera uma única nota.
+
+    - `Payload`: Nenhum.
+
+DELETE
+- Deleta um Cliente.
+    - `Parâmetros`:
+        - Obrigatório
+            - cliente='id'.
+              -O produto não será deletado se já estiver em uma nota fiscal.
+
+    - `Payload`:
+        - Campos id e nome ou um array de dados.
+
+PUT
+- Atualiza um Cliente escolhido.
+    - `Parâmetros`: Nenhum.
+
+    - `Payload`: Todos os campos.
 
 ##
 
-## Relatorio
+##
+
+## Relatório
 
 
 	------------------------------------------------
