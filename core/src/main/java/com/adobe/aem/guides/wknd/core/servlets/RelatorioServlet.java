@@ -15,16 +15,20 @@
  */
 package com.adobe.aem.guides.wknd.core.servlets;
 
+import com.adobe.aem.guides.wknd.core.models.ErroDTO;
 import com.adobe.aem.guides.wknd.core.service.RelatorioService;
+import com.google.gson.Gson;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.propertytypes.ServiceDescription;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -48,27 +52,26 @@ import static org.apache.sling.api.servlets.ServletResolverConstants.*;
 public class RelatorioServlet extends SlingAllMethodsServlet {
 
     private static final long serialVersionUID = 1L;
-
-    @Reference
-    private RelatorioService relatorioService;
+    private final RelatorioService relatorioService;
+    @Activate
+    public RelatorioServlet(@Reference RelatorioService relatorioService){
+        this.relatorioService=relatorioService;
+    }
     @Override
-    protected void doGet(final SlingHttpServletRequest req,
-                         final SlingHttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        String json = relatorioService.doGet(req,resp);
+    protected void doGet(SlingHttpServletRequest req,
+                         SlingHttpServletResponse resp) throws ServletException, IOException {
+        int statusCode = HttpServletResponse.SC_OK;
+        resp.setContentType("application/json");
+        String json = "";
+        try {
+             json = relatorioService.doGet(req, resp);
+        }catch (Exception e){
+            statusCode = HttpServletResponse.SC_BAD_REQUEST;
+            json = new Gson().toJson(new ErroDTO("Erro no get"));
+        }
+        resp.setStatus(statusCode);
         resp.getWriter().println(json);
-//        File pdfFile = new File(json);
-//        resp.setContentType("application/pdf");
-//        resp.addHeader("Content-Disposition", "attachment; filename=" + "relatorio.pdf");
-//        resp.setContentLength((int) pdfFile.length());
-//
-//        try (FileInputStream fileInputStream = new FileInputStream(pdfFile)) {
-//            OutputStream responseOutputStream = resp.getOutputStream();
-//            int bytes;
-//            while ((bytes = fileInputStream.read()) != -1) {
-//                responseOutputStream.write(bytes);
-//            }
-//        }
+
 
     }
     @Override

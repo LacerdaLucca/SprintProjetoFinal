@@ -1,4 +1,5 @@
 com\adobe\aem\guides\wknd\core\service\ClienteServiceImpl$1.class
+com\adobe\aem\guides\wknd\core\service\ProdutoServiceImpl$2.class
 com\adobe\aem\guides\wknd\core\service\RelatorioServiceImpl.class
 com\adobe\aem\guides\wknd\core\servlets\NotaFiscalServlet.class
 com\adobe\aem\guides\wknd\core\schedulers\SimpleScheduledTask$Config.class
