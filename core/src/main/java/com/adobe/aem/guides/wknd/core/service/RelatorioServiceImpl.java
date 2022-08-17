@@ -14,6 +14,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 
+import javax.json.JsonException;
 import java.io.IOException;
 import java.util.List;
 
@@ -42,10 +43,18 @@ public class RelatorioServiceImpl implements RelatorioService {
     }
 
     private String strToHTML(RelatorioDTO relatorioDTO) {
-        String resultado = relatorioDTO.getIdCliente() + "</br>";
+        String resultado = "<html> \n" + "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <title>Relatórios</title>\n" +
+                "\n" +
+                "</head>"+
+                "<body> \n Cliente: "
+                + relatorioDTO.getIdCliente() +
+                "</br>";
         for (Produto produto:relatorioDTO.getProdutos()){
-            resultado+= produto.toHTML();
+            resultado+= "\n" + produto.toHTML();
         }
+        resultado += "\n</body>" + "\n</html>";
         return resultado;
     }
 
@@ -71,6 +80,10 @@ public class RelatorioServiceImpl implements RelatorioService {
 
     @Override
     public String strToJson(Object obj) {
-        return new Gson().toJson(obj);
+        try {
+            return new Gson().toJson(obj);
+        }catch (Exception e){
+            throw new JsonException("Erro no Json");
+        }
     }
 }

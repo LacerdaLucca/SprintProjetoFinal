@@ -10,6 +10,7 @@ import org.apache.sling.api.SlingHttpServletResponse;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import javax.json.JsonException;
 import java.io.IOException;
 import java.util.List;
 
@@ -63,18 +64,22 @@ public class NotaFiscalServiceImpl implements NotaFiscalService {
 
     @Override
     public String doDelete(SlingHttpServletRequest req, SlingHttpServletResponse resp) {
-        String json = "";
-        if(req.getParameter("numero")!=null) {
-            NotaFiscal notaFiscal = notaFiscalDao.buscaNotaFiscal(Integer.parseInt(req.getParameter("numero")));
-            notaFiscalDao.rmvNotaFiscal(notaFiscal);
-            json = strToJson(notaFiscal);
-            if(notaFiscal==null) {
-                json = strToJson(getErroDTO("NotaFiscal não encontrado para ser deletado"));
+        try {
+            String json = "";
+            if (req.getParameter("numero") != null) {
+                NotaFiscal notaFiscal = notaFiscalDao.buscaNotaFiscal(Integer.parseInt(req.getParameter("numero")));
+                notaFiscalDao.rmvNotaFiscal(notaFiscal);
+                json = strToJson(notaFiscal);
+                if (notaFiscal == null) {
+                    json = strToJson(getErroDTO("NotaFiscal não encontrado para ser deletado"));
+                }
+            } else {
+                json = strToJson(getErroDTO("Você não passou o id como parâmetro para ser deletado"));
             }
-        }else{
-            json = strToJson(getErroDTO("Você não passou o id como parâmetro para ser deletado"));
+            return json;
+        }catch (Exception e){
+            return strToJson(getErroDTO("Entrada de dados invalidas"));
         }
-        return json;
     }
     @Override
     public String doPut(final SlingHttpServletRequest req, final SlingHttpServletResponse resp){
@@ -102,6 +107,10 @@ public class NotaFiscalServiceImpl implements NotaFiscalService {
 
     @Override
     public String strToJson(Object obj) {
-        return new Gson().toJson(obj);
+        try {
+            return new Gson().toJson(obj);
+        }catch (Exception e){
+            throw new JsonException("Erro no Json");
+        }
     }
 }

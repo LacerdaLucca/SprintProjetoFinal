@@ -13,6 +13,7 @@ import org.apache.sling.api.SlingHttpServletResponse;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import javax.json.JsonException;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
@@ -84,33 +85,34 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public String doDelete(SlingHttpServletRequest req, SlingHttpServletResponse resp) {
-        String json = "";
-        String clientePS = null;
-        List<Cliente> listaCliente = null;
         try {
-            clientePS = IOUtils.toString(req.getReader());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        if(req.getParameter("id")!=null || (clientePS !=null && (clientePS.charAt(0) != '['))) {
-            Cliente cliente = null;
-            if(req.getParameter("id")==null){
-                cliente = new Gson().fromJson(clientePS, Cliente.class);
-            }else {
-                cliente = clienteDao.buscaCliente(Integer.parseInt(req.getParameter("id")));
-            }
+            String json = "";
+            String clientePS = null;
+            List<Cliente> listaCliente = null;
             try {
-                if (clienteDao.buscaCliente(cliente.getId()).getNome().equals(cliente.getNome())) {
-                    clienteDao.rmvCliente(cliente);
-                } else {
-                    return strToJson(getErroDTO("Nome diferente do registrado, remoção interrompida"));
-                }
-            }catch (Exception ex){
-                return strToJson(getErroDTO("Cliente não encontrado para ser deletado"));
+                clientePS = IOUtils.toString(req.getReader());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            json = strToJson(cliente);
-        }else{
-            if(clientePS !=null && (clientePS.charAt(0) == '[')) {
+            if (req.getParameter("id") != null || (clientePS != null && (clientePS.charAt(0) != '['))) {
+                Cliente cliente = null;
+                if (req.getParameter("id") == null) {
+                    cliente = new Gson().fromJson(clientePS, Cliente.class);
+                } else {
+                    cliente = clienteDao.buscaCliente(Integer.parseInt(req.getParameter("id")));
+                }
+                try {
+                    if (clienteDao.buscaCliente(cliente.getId()).getNome().equals(cliente.getNome())) {
+                        clienteDao.rmvCliente(cliente);
+                    } else {
+                        return strToJson(getErroDTO("Nome diferente do registrado, remoção interrompida"));
+                    }
+                } catch (Exception ex) {
+                    return strToJson(getErroDTO("Cliente não encontrado para ser deletado"));
+                }
+                json = strToJson(cliente);
+            } else {
+                if (clientePS != null && (clientePS.charAt(0) == '[')) {
                     Type tipoLista = new TypeToken<ArrayList<Cliente>>() {
                     }.getType();
                     listaCliente = new Gson().fromJson(clientePS, tipoLista);
@@ -126,11 +128,14 @@ public class ClienteServiceImpl implements ClienteService {
                     } catch (Exception e) {
                         return strToJson(getErroDTO("Entrada de dados invalidos"));
                     }
-            }else{
-                json = strToJson(getErroDTO("Informações invalidas para a remoção"));
+                } else {
+                    json = strToJson(getErroDTO("Informações invalidas para a remoção"));
+                }
             }
+            return json;
+        }catch (Exception e){
+            return strToJson(getErroDTO("Entrada de dados invalidas"));
         }
-        return json;
     }
         @Override
     public String doPut(final SlingHttpServletRequest req, final SlingHttpServletResponse resp){
@@ -158,6 +163,10 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public String strToJson(Object obj) {
-        return new Gson().toJson(obj);
+        try {
+            return new Gson().toJson(obj);
+        }catch (Exception e){
+            throw new JsonException("Erro no Json");
+        }
     }
 }

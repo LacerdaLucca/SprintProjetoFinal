@@ -2,6 +2,7 @@ package com.adobe.aem.guides.wknd.core.dao;
 
 import com.adobe.aem.guides.wknd.core.models.RelatorioDTO;
 import com.adobe.aem.guides.wknd.core.service.DatabaseService;
+import com.adobe.aem.guides.wknd.core.service.RelatorioDTOService;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -15,8 +16,11 @@ public class RelatorioDaoImpl implements RelatorioDao{
     @Reference
     private DatabaseService databaseService;
 
+    @Reference
+    private RelatorioDTOService relatorioDTOService;
+
     public RelatorioDTO buscaComprasCliente(int idCliente) {
-        RelatorioDTO relatorio = new RelatorioDTO(idCliente);
+        RelatorioDTO relatorioDTO = new RelatorioDTO(idCliente);
         try (Connection connection = databaseService.getConnection()) {
             String sql = "SELECT IDPRODUTO FROM NotaFiscal WHERE IDCLIENTE = ? ";
             try (PreparedStatement pstm = connection.prepareStatement(sql)) {
@@ -25,14 +29,14 @@ public class RelatorioDaoImpl implements RelatorioDao{
                 try (ResultSet rst = pstm.getResultSet()) {
 
                     while (rst.next()) {
-                        relatorio.addProdutoRelatorio(rst.getInt(1));
+                        relatorioDTO = relatorioDTOService.addProdutoRelatorio(rst.getInt(1),relatorioDTO);
                     }
                 }
             }
         }catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return relatorio;
+        return relatorioDTO;
     }
 }
 

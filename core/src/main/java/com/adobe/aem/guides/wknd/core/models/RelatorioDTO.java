@@ -21,7 +21,11 @@ public class RelatorioDTO {
     public void addProdutoRelatorio(int idProduto){
         ProdutoDao produtoDao = new ProdutoDaoImpl();
         Produto produto = produtoDao.buscaProduto(idProduto);
-//        Produto produto = new Produto();
+        this.produtos.add(produto);
+    }
+
+
+    public void setProduto(Produto produto) {
         this.produtos.add(produto);
     }
 

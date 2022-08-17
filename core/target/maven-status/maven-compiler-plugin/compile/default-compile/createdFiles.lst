@@ -1,6 +1,7 @@
 com\adobe\aem\guides\wknd\core\service\ClienteServiceImpl$1.class
 com\adobe\aem\guides\wknd\core\service\ProdutoServiceImpl$2.class
 com\adobe\aem\guides\wknd\core\service\RelatorioServiceImpl.class
+com\adobe\aem\guides\wknd\core\service\RelatorioDTOService.class
 com\adobe\aem\guides\wknd\core\servlets\NotaFiscalServlet.class
 com\adobe\aem\guides\wknd\core\schedulers\SimpleScheduledTask$Config.class
 com\adobe\aem\guides\wknd\core\listeners\package-info.class
@@ -8,6 +9,7 @@ com\adobe\aem\guides\wknd\core\models\ErroDTO.class
 com\adobe\aem\guides\wknd\core\dao\RelatorioDao.class
 com\adobe\aem\guides\wknd\core\models\HelloWorldModel.class
 com\adobe\aem\guides\wknd\core\service\NotaFiscalService.class
+com\adobe\aem\guides\wknd\core\service\RelatorioDTOServiceImpl.class
 com\adobe\aem\guides\wknd\core\dao\ClienteDao.class
 com\adobe\aem\guides\wknd\core\schedulers\SimpleScheduledTask.class
 com\adobe\aem\guides\wknd\core\dao\NotaFiscalDao.class
